@@ -465,3 +465,55 @@ function App() {
 }
 export default App;
 ```
+
+### 6.8. 사용 예제(Geolocation API)
+
+- 사용자의 위치 정보를 웹 애플리케이션에 제공할 수 있는 API
+- 개인정보 보호를 위해서 브라우저는 사용자에게 위치 정보에 대한 권한을 받은 후 위치 정보를 사용할 수 있다.
+- Geolocation.getCurrentPosition() : 기기의 현재 위치를 가져오는 메소드
+- Geolocation.watchPosition() : 기기의 위치가 바뀔 때마다, 새로운 위치를 사용하여 함수를 호출한다.
+
+#### 6.8.1. Geolocation으로 현재 위치 마커 표시하기
+
+```jsx
+import { useEffect, useState } from "react";
+import { Map, MapMarker } from "react-kakao-maps-sdk";
+
+function App() {
+  // 현재 위치를 저장할 상태
+  const [location, setLoacation] = useState(null);
+  // 위치 성송
+  const successHandler = response => {
+    console.log(response);
+    // coords: GeolocationCoordinates {latitude: 위도, longitude: 경도, …} timestamp: 1673446873903
+    const { latitude, longitude } = response.coords;
+    setLoacation({ latitude, longitude });
+  };
+  // 위치 에러
+  const errorHandler = error => {
+    console.log(error);
+  };
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(successHandler, errorHandler);
+    // 성공시 successHandler, 실패시 errorHandler 함수가 실행된다.
+  }, []);
+
+  return (
+    <>
+      {location && (
+        <Map
+          center={{ lat: location.latitude, lng: location.longitude }}
+          style={{ width: "800px", height: "600px" }}
+          level={3}
+        >
+          <MapMarker
+            position={{ lat: location.latitude, lng: location.longitude }}
+          />
+        </Map>
+      )}
+    </>
+  );
+}
+export default App;
+```
