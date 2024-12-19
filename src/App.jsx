@@ -1,54 +1,349 @@
-import { useEffect, useState } from "react";
-import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { ResponsiveLine } from "@nivo/line";
 
-function App() {
-  // 지도의 로딩 상태를 관리하는 state를 선언합니다
-  const [isMapLoaded, setIsMapLoaded] = useState(false);
+const getData = [
+  {
+    id: "japan",
+    color: "hsl(347, 70%, 50%)",
+    data: [
+      {
+        x: "plane",
+        y: 48,
+      },
+      {
+        x: "helicopter",
+        y: 104,
+      },
+      {
+        x: "boat",
+        y: 242,
+      },
+      {
+        x: "train",
+        y: 26,
+      },
+      {
+        x: "subway",
+        y: 281,
+      },
+      {
+        x: "bus",
+        y: 157,
+      },
+      {
+        x: "car",
+        y: 172,
+      },
+      {
+        x: "moto",
+        y: 76,
+      },
+      {
+        x: "bicycle",
+        y: 265,
+      },
+      {
+        x: "horse",
+        y: 148,
+      },
+      {
+        x: "skateboard",
+        y: 106,
+      },
+      {
+        x: "others",
+        y: 37,
+      },
+    ],
+  },
+  {
+    id: "france",
+    color: "hsl(253, 70%, 50%)",
+    data: [
+      {
+        x: "plane",
+        y: 144,
+      },
+      {
+        x: "helicopter",
+        y: 83,
+      },
+      {
+        x: "boat",
+        y: 246,
+      },
+      {
+        x: "train",
+        y: 78,
+      },
+      {
+        x: "subway",
+        y: 248,
+      },
+      {
+        x: "bus",
+        y: 222,
+      },
+      {
+        x: "car",
+        y: 299,
+      },
+      {
+        x: "moto",
+        y: 244,
+      },
+      {
+        x: "bicycle",
+        y: 89,
+      },
+      {
+        x: "horse",
+        y: 65,
+      },
+      {
+        x: "skateboard",
+        y: 44,
+      },
+      {
+        x: "others",
+        y: 30,
+      },
+    ],
+  },
+  {
+    id: "us",
+    color: "hsl(26, 70%, 50%)",
+    data: [
+      {
+        x: "plane",
+        y: 227,
+      },
+      {
+        x: "helicopter",
+        y: 8,
+      },
+      {
+        x: "boat",
+        y: 218,
+      },
+      {
+        x: "train",
+        y: 190,
+      },
+      {
+        x: "subway",
+        y: 213,
+      },
+      {
+        x: "bus",
+        y: 59,
+      },
+      {
+        x: "car",
+        y: 82,
+      },
+      {
+        x: "moto",
+        y: 286,
+      },
+      {
+        x: "bicycle",
+        y: 151,
+      },
+      {
+        x: "horse",
+        y: 22,
+      },
+      {
+        x: "skateboard",
+        y: 189,
+      },
+      {
+        x: "others",
+        y: 195,
+      },
+    ],
+  },
+  {
+    id: "germany",
+    color: "hsl(85, 70%, 50%)",
+    data: [
+      {
+        x: "plane",
+        y: 30,
+      },
+      {
+        x: "helicopter",
+        y: 187,
+      },
+      {
+        x: "boat",
+        y: 278,
+      },
+      {
+        x: "train",
+        y: 178,
+      },
+      {
+        x: "subway",
+        y: 242,
+      },
+      {
+        x: "bus",
+        y: 209,
+      },
+      {
+        x: "car",
+        y: 256,
+      },
+      {
+        x: "moto",
+        y: 91,
+      },
+      {
+        x: "bicycle",
+        y: 95,
+      },
+      {
+        x: "horse",
+        y: 189,
+      },
+      {
+        x: "skateboard",
+        y: 270,
+      },
+      {
+        x: "others",
+        y: 34,
+      },
+    ],
+  },
+  {
+    id: "norway",
+    color: "hsl(18, 70%, 50%)",
+    data: [
+      {
+        x: "plane",
+        y: 162,
+      },
+      {
+        x: "helicopter",
+        y: 82,
+      },
+      {
+        x: "boat",
+        y: 142,
+      },
+      {
+        x: "train",
+        y: 171,
+      },
+      {
+        x: "subway",
+        y: 45,
+      },
+      {
+        x: "bus",
+        y: 142,
+      },
+      {
+        x: "car",
+        y: 142,
+      },
+      {
+        x: "moto",
+        y: 239,
+      },
+      {
+        x: "bicycle",
+        y: 167,
+      },
+      {
+        x: "horse",
+        y: 86,
+      },
+      {
+        x: "skateboard",
+        y: 296,
+      },
+      {
+        x: "others",
+        y: 147,
+      },
+    ],
+  },
+];
 
-  // 컴포넌트가 마운트될 때 카카오맵 스크립트를 로드합니다
-  useEffect(() => {
-    // 카카오맵 스크립트 엘리먼트를 생성합니다
-    const kakaoMapScript = document.createElement("script");
-    // 스크립트를 비동기로 로드하도록 설정합니다
-    kakaoMapScript.async = true;
-    // 카카오맵 SDK URL을 설정합니다 (환경변수에서 API 키를 가져옵니다)
-    kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KKO_MAP_KEY}&autoload=false`;
-
-    // 스크립트 로드가 완료되면 실행될 이벤트 리스너를 추가합니다
-    kakaoMapScript.addEventListener("load", () => {
-      // 카카오맵을 로드하고 로딩 상태를 true로 변경합니다
-      window.kakao.maps.load(() => {
-        setIsMapLoaded(true);
-      });
-    });
-
-    // 생성한 스크립트를 head에 추가합니다
-    document.head.appendChild(kakaoMapScript);
-
-    // 컴포넌트가 언마운트될 때 스크립트를 제거합니다
-    return () => {
-      document.head.removeChild(kakaoMapScript);
-    };
-  }, []);
-
-  // 지도가 로드되지 않았다면 로딩 메시지를 표시합니다
-  if (!isMapLoaded) {
-    return <div>지도를 불러오는 중입니다...</div>;
-  }
-
+const App = () => {
   return (
-    <div>
-      <h1>카카오 지도: 마커 출력하기</h1>
-      <Map
-        center={{ lat: 33.5563, lng: 126.79581 }}
-        style={{ width: "800px", height: "600px" }}
-        level={3}
-      >
-        <MapMarker position={{ lat: 33.55635, lng: 126.795841 }} />
-      </Map>
+    <div style={{ width: "80%", height: 500, margin: "0 auto" }}>
+      <ResponsiveLine
+        data={getData}
+        margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
+        xScale={{ type: "point" }}
+        yScale={{
+          type: "linear",
+          min: "auto",
+          max: "auto",
+          stacked: true,
+          reverse: false,
+        }}
+        yFormat=" >-.2f"
+        axisTop={null}
+        axisRight={null}
+        axisBottom={{
+          tickSize: 5,
+          tickPadding: 5,
+          tickRotation: 0,
+          legend: "transportation",
+          legendOffset: 36,
+          legendPosition: "middle",
+          truncateTickAt: 0,
+        }}
+        axisLeft={{
+          tickSize: 5,
+          tickPadding: 5,
+          tickRotation: 0,
+          legend: "count",
+          legendOffset: -40,
+          legendPosition: "middle",
+          truncateTickAt: 0,
+        }}
+        pointSize={10}
+        pointColor={{ theme: "background" }}
+        pointBorderWidth={2}
+        pointBorderColor={{ from: "serieColor" }}
+        pointLabel="data.yFormatted"
+        pointLabelYOffset={-12}
+        enableTouchCrosshair={true}
+        useMesh={true}
+        legends={[
+          {
+            anchor: "bottom-right",
+            direction: "column",
+            justify: false,
+            translateX: 100,
+            translateY: 0,
+            itemsSpacing: 0,
+            itemDirection: "left-to-right",
+            itemWidth: 80,
+            itemHeight: 20,
+            itemOpacity: 0.75,
+            symbolSize: 12,
+            symbolShape: "circle",
+            symbolBorderColor: "rgba(0, 0, 0, .5)",
+            effects: [
+              {
+                on: "hover",
+                style: {
+                  itemBackground: "rgba(0, 0, 0, .03)",
+                  itemOpacity: 1,
+                },
+              },
+            ],
+          },
+        ]}
+      />
     </div>
   );
-}
-
-// App 컴포넌트를 내보냅니다
+};
 export default App;
