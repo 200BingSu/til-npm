@@ -5,7 +5,7 @@ import { add, minus, reset } from "../features/counter/counterSlice";
 function Counter() {
   // RTK의 store를 불러들여서 그 중 counter 사용하겠다.
   const { count } = useSelector(state => state.counter); // store의 reducer의 키와 키값를 사용
-  console.log(count.count);
+  console.log(count);
   //   RTK의 store의 counter의 값 갱신 dispatch 사용하겠다.
   const dispatch = useDispatch();
   return (
