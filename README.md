@@ -332,4 +332,4 @@ function CartItem({ item }) {
 export default CartItem;
 ```
 
-- `/src/components/CartSummary.jsx`
+- `/src/components/cart/CartSummary.jsx`
