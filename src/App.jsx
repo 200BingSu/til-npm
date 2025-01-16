@@ -12,7 +12,7 @@ function App() {
     // 스크립트를 비동기로 로드하도록 설정합니다
     kakaoMapScript.async = true;
     // 카카오맵 SDK URL을 설정합니다 (환경변수에서 API 키를 가져옵니다)
-    kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KKO_MAP_KEY}&autoload=false`;
+    kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${import.meta.env.VITE_KAKAO_JS_KEY}&autoload=false`;
 
     // 스크립트 로드가 완료되면 실행될 이벤트 리스너를 추가합니다
     kakaoMapScript.addEventListener("load", () => {
