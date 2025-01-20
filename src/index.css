@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.btn {
+/* .btn {
   @apply px-4 py-2 font-bold rounded;
 }
 .btn-primary {
@@ -10,4 +10,4 @@
 }
 .btn-secondary {
   @apply bg-gray-500 text-white rounded hover:bg-gray-600;
-}
+} */
