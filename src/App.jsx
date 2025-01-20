@@ -1,28 +1,22 @@
-import { ConfigProvider } from "antd";
-import JoinForm from "./components/JoinForm";
-import { useState } from "react";
-
-const ThemeData = {
-  token: {
-    colorPrimary: "#0DD1FD",
-    colorSecondary1: "#FFF600", // Secondary 1
-    colorSecondary2: "#6B4AD6", // Secondary 2
-    colorSecondary3: "#FB653D", // Secondary 3
-  },
-  Button: {
-    colorPrimary: "#02AED5",
-    colorSecondary1: "#CCC500", // Secondary 1
-    colorSecondary2: "#4F2CC1", // Secondary 2
-    colorSecondary3: "#FA3D0B", // Secondary 3
-  },
-};
+import { useEffect } from "react";
+import axiosInstance from "./apis/fetch";
 
 function App() {
-  const [data, setData] = useState(ThemeData);
-  return (
-    <ConfigProvider theme={data}>
-      <JoinForm theme={data} />
-    </ConfigProvider>
-  );
+  const loginApi = async () => {
+    try {
+      const res = await axiosInstance.post(`/api/user/sign-in`, {
+        email: "qgq0520@naver.com",
+        upw: "1234",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    loginApi();
+  }, []);
+
+  return <div>App</div>;
 }
 export default App;
