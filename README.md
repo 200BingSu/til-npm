@@ -15,3 +15,7 @@ npm install antd --save
 ## 실습
 
 - `/src/components/JoinForm.jsx`
+
+## 실습2 (비밀번호 비교 예제)
+
+- `/src/component/PwForm.jsx`
