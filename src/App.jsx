@@ -20,20 +20,25 @@ import PwForm from "./components/PwForm";
 //   },
 // };
 
+// const ThemeData = {
+//   token: {
+//     colorPrimary: "#0DD1FD",
+//     colorSecondary1: "#FFF600", // Secondary 1
+//     colorSecondary2: "#6B4AD6", // Secondary 2
+//     colorSecondary3: "#FB653D", // Secondary 3
+//   },
+//   components: {
+//     Button: {
+//       colorPrimary: "#02AED5",
+//       colorPrimaryHover: "#A5EEFE",
+//       boxShadow: "none",
+//       boxShadowSecondary: "none",
+//     },
+//   },
+// };
 const ThemeData = {
   token: {
     colorPrimary: "#0DD1FD",
-    colorSecondary1: "#FFF600", // Secondary 1
-    colorSecondary2: "#6B4AD6", // Secondary 2
-    colorSecondary3: "#FB653D", // Secondary 3
-  },
-  components: {
-    Button: {
-      colorPrimary: "#02AED5",
-      colorPrimaryHover: "#A5EEFE",
-      boxShadow: "none",
-      boxShadowSecondary: "none",
-    },
   },
 };
 
