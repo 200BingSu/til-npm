@@ -1,6 +1,8 @@
 import axios from "axios";
+import { useState } from "react";
 
 const App = () => {
+  const [file, setFile] = useState(null);
   const handleSubmit = async () => {
     try {
       const formData = new FormData();
@@ -15,8 +17,8 @@ const App = () => {
         "p",
         new Blob([JSON.stringify(sendData)], { type: "application/json" }),
       );
-      if (파일) {
-        formData.append("pic", 파일);
+      if (file) {
+        formData.append("pic", file);
       }
 
       const res = await axios.post("/api/user/sign-up", formData, {
@@ -29,10 +31,14 @@ const App = () => {
       console.log(error);
     }
   };
+  const handleClick = e => {
+    console.log(e.target.files.FileList[0]);
+  };
 
   return (
     <div>
       <h1>File 및 json 데이터 post 테스트</h1>
+      <input type="file" name="" id="" onClick={e => handleClick(e)} />
       <button onClick={() => handleSubmit()}>업로드</button>
     </div>
   );
