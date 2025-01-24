@@ -1,14 +1,5 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-<<<<<<< HEAD
-  content: [],
-  theme: {
-    extend: {},
-  },
-  plugins: [],
-}
-
-=======
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}", // Vite 프로젝트에 맞는 파일 확장자 추가
@@ -32,4 +23,3 @@ export default {
   },
   plugins: [],
 };
->>>>>>> 4144ec66affa4341e42624d3105258a1c6a38af6
