@@ -24,17 +24,6 @@ function App() {
   return (
     <div>
       <h1>JWT : accessToken 만 존재</h1>
-      <Button
-        type="primary"
-        onClick={() => {
-          login();
-        }}
-      >
-        로그인
-      </Button>
-      <p>인증키 : {loginInfo?.accessToken}</p>
-
-      <Test />
     </div>
   );
 }

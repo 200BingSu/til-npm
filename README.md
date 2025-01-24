@@ -9,23 +9,30 @@
 
 - 복잡한 문자열(토큰)을 서버에서 만들어서 준다.
 
-## 2. 시라리오
+## 2. 시나리오
 
-- 사용자가 로그인 후 Response로 accessToken만 올 경우.
-- refresh가 없음.
-  - 서버 관리자가 15분마다 accessToken을 지움.
+- 사용자가 로그인을 합니다.
+- Response 로 2개의 값이 오는게 정석입니다.
+- accessToken : 서버에서 만들어서 돌려줌.
+  - api 호출시 첨부함.
+- refreshToken : 서버에서 만들어서 돌려줌.
+  - api 호출시 401 (UnAuthorization) : 인증만료가 되었다.
+  - 인증키 즉 accessToken 만료시 새로 요청을 해서
+    - accessToken 과 refreshToken 을 다시 받는다.
+- 2개의 값을 클라이언트가 보관(Recoil, Context, Cookie 등)합니다.
+- api 를 호출할때 /api/tourlist 할때 accessToken 을 같이 보내줌
 
-## 3 . accessToken만 있는 경우
+## 3. refreshToken이 있는 경우 처리
 
-### 1. 만료되면 로그아웃 시킨다.
+### 만료되면 다시 refreshToken으로 요청하고 다시 새로운 토큰으로 axios를 호출한다.
 
-### 2. 만료되면 accessToken을 재발행한다.
-
-## 4. 필요로 한 npm
+## 4. 필요로 한 npm 들
 
 - axios
-- recoil
 - react-cookie
+- recoil
+
+## 5. 로그인 후 jwt 정보 관리하기
 
 ```jsx
 import axios from "axios";
@@ -35,7 +42,6 @@ import { setCookie } from "./utils/cookie";
 
 function App() {
   const [loginInfo, setLoginInfo] = useRecoilState(loginInfoState);
-
   const login = async () => {
     try {
       const res = await axios.post("/api/user/sign-in", {
@@ -43,7 +49,9 @@ function App() {
         upw: "1q2w3e4R!",
       });
       console.log(res.data);
+      // 리코일에 전체 저장
       setLoginInfo(res.data.resultData);
+      // 쿠키에 보관하기
       setCookie("accessToken", res.data.resultData.accessToken);
     } catch (error) {
       console.log(error);
@@ -66,19 +74,18 @@ function App() {
 export default App;
 ```
 
-## 6. jwt 정보로 accessToken으로 axios 호출하기
+## 6. jwt 정보에 있는 accessToken 으로 axios 호출하기
 
-- axios 호출 시 header에 Authorization의 Bearer에 담는다.
-- 만약 401 즉, 만료가 오면 로그인으로 오면
-- 대응법 1: 로그인으로 다시 이동
-- 대응법 2: 토큰 재발급 후 다시 axios로 호출
+- aixois 호출시 header 에 Authrization 에 Bearer 로 담는다.
+- 만약 401 즉, 만료가 오면
+- 대응법 1 : 로그인으로 다시 이동
+- 대응법 2 : 토큰 재발급 후 다시 axios 호출
 
-```jsx
+```js
 import axios from "axios";
 import { useRecoilState } from "recoil";
 import { loginInfoState } from "./atoms/userInfo";
-import { removeCookie, setCookie } from "./utils/cookie";
-import { Button } from "antd";
+import { getCookie, removeCookie, setCookie } from "./utils/cookie";
 
 function App() {
   const [loginInfo, setLoginInfo] = useRecoilState(loginInfoState);
@@ -100,14 +107,13 @@ function App() {
   return (
     <div>
       <h1>JWT : accessToken 만 존재</h1>
-      <Button
-        type="primary"
+      <button
         onClick={() => {
           login();
         }}
       >
         로그인
-      </Button>
+      </button>
       <p>인증키 : {loginInfo?.accessToken}</p>
 
       <Test />
@@ -117,42 +123,49 @@ function App() {
 export default App;
 
 function Test() {
-  const [loginInfo, setLoginInfo] = useRecoilState(loginInfoState);
-  const accessToken = loginInfo.accessToken;
+  // 리코일
+  const [liginInfo, setLoginInfo] = useRecoilState(loginInfoState);
   const callFn = async () => {
     try {
+      // accessToken 을 담아서 보내기
+      // 리코일에서 찾기
+      // const accessToken = liginInfo.accessToken;
+      // 쿠키에서 찾기
+      const accessToken = getCookie("accessToken");
+      // console.log(accessToken);
       const res = await axios.get("/api/user", {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
       console.log(res.data);
-      // 만약에 인증키 만료라면(unAthorized)
+      // 만약에 인증키 만료라면 UnAuthorized
       if (res.status === 401) {
         // 인증키가 만료되었다고 온다면
-        // 선택을 해야한다.
-        removeCookie("accessToken");
-        // 1. 강제로 다시 로그인
+        // 선택을 해야 한다.
+        // 1번 케이스 : 강제로 로그인 이동
+        //alert("다시 로그인을 해주세요.");
+        // alert("라우터로 login 창으로 이동시킨다.");
+        // removeCookie("accessToken");
         // setLoginInfo({});
-        // alert("다시 로그인을 해주세요");
-        // alert("라우터로 login창으로 이동합니다.");
-        // 2. 다시 accessToken 재발행
+        // 2번 케이스 : 다시 accessToken 을 받자.
         resetToken();
       }
     } catch (error) {
       console.log(error);
     }
   };
+
   const resetToken = async () => {
     try {
-      const res = await axios.get(`/api/user/access-token`);
-      console.log(res.data);
-      setCookie("accessToken", res.data.resultData.accessToken);
+      const res = await axios.get("/api/user/access-token");
+      console.log(res);
+      setCookie("accessToken");
       setLoginInfo(prev => ({
         ...prev,
         accessToken: res.data.ressulData.accessToken,
       }));
-      // 본래 하려던 api 호출
+      // 원래하려던 API 다시 호출
       callFn();
     } catch (error) {
       console.log(error);
@@ -162,9 +175,7 @@ function Test() {
   return (
     <div>
       <h1>테스트</h1>
-      <Button type="primary" onClick={() => callFn()}>
-        api 호출
-      </Button>
+      <button onClick={() => callFn()}>api 호출</button>
     </div>
   );
 }
