@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
-import { getAccessToken, getMemberWithAccessToken } from "../../kko/kkoapi";
+
 import { useEffect, useState } from "react";
+import { getAccessToken, getMemberWithAccessToken } from "../../kko/kakaoapi";
 
 const After = () => {
   // 카카오 사용자 정보 보관

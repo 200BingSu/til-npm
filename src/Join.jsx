@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
-import { getKakaoLoginLink } from "./kko/kkoapi";
 import { getGoogleLoginLink } from "./google/googleapi";
+import { getKakaoLoginLink } from "./kko/kakaoapi";
 
 function Join() {
   const kakaoLogin = getKakaoLoginLink();
