@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // REST Key 처리
-const rest_api_key = import.meta.env.VITE_KKO_LOGIN_REST_API_KEY;
+const rest_api_key = import.meta.env.VITE_KAKAO_LOGIN_REST_KEY;
 // 카카오 로그인시 토큰 API 경로
 const auth_code_path = "https://kauth.kakao.com/oauth/authorize";
 // 카카오 로그인 성공시 이동후 인증키 파악 경로

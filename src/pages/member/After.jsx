@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
+import { getAccessToken, getMemberWithAccessToken } from "../../kko/kkoapi";
 import { useEffect, useState } from "react";
-import { getAccessToken, getMemberWithAccessToken } from "../../kko/kakaoapi";
 
 const After = () => {
   // 카카오 사용자 정보 보관
@@ -36,11 +36,17 @@ const After = () => {
       <h1>인가키 {authCode}</h1>
       <h2>KKO 로그인 후 </h2>
       <div>
-        <p>아이디 : {userInfo.id}</p>
-        <p>닉네임 : {userInfo.kakao_account.profile.nickname}</p>
-        <p>이메일 : {userInfo.kakao_account.email}</p>
+        <p>아이디 : {userInfo?.id}</p>
+        <p>닉네임 : {userInfo?.kakao_account.profile.nickname}</p>
+        <p>이메일 : {userInfo?.kakao_account.email}</p>
         <p>
-          사용자 사진 :{userInfo.kakao_account.profile.thumbnail_image_url}{" "}
+          사용자 사진 :{userInfo?.kakao_account.profile.thumbnail_image_url}{" "}
+        </p>
+        <p>
+          추가정보취미 : <input type="text" />
+        </p>
+        <p>
+          <button>회원가입</button>
         </p>
       </div>
     </div>
