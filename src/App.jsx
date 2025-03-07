@@ -1,10 +1,10 @@
 import { BrowserRouter } from "react-router-dom";
-import AniPage from "./pages/AniPage";
+import Framer from "./pages/Framer";
 
 const App = () => {
   return (
     <BrowserRouter>
-      <AniPage />
+      <Framer />
     </BrowserRouter>
   );
 };
